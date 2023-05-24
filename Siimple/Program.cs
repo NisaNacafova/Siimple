@@ -2,12 +2,15 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Siimple.DataContext;
 using Siimple.Models;
+using Siimple.Services.Abstracts;
+using Siimple.Services.Concrets;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddScoped<IRepository<Team>, TeamRepository>();
+builder.Services.AddScoped<IRepository<Setting>, SettingRepository>();
 builder.Services.AddDbContext<SiimpleDbContext>(opt =>
 {
     opt.UseSqlServer(builder.Configuration.GetConnectionString("Default"));

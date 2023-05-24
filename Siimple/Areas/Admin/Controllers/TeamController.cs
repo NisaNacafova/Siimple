@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Siimple.DataContext;
 using Siimple.Extensions;
 using Siimple.Models;
+using Siimple.Services.Abstracts;
 using Siimple.ViewModels;
 using Siimple.ViewModels.TeamVm;
 using System.Data;
@@ -14,12 +15,14 @@ namespace Siimple.Areas.Admin.Controllers
     [Authorize(Roles = "Admin")]
     public class TeamController : Controller
     {
+        private readonly IRepository<Team> _repository;
         private readonly SiimpleDbContext _db;
         private readonly IWebHostEnvironment _environment;
-        public TeamController(SiimpleDbContext simple,IWebHostEnvironment web)
+        public TeamController(SiimpleDbContext simple,IWebHostEnvironment web,IRepository<Team> repo)
         {
             _db = simple;
             _environment = web;
+            _repository = repo;
         }
         public IActionResult Index(int page = 1, int take = 5)
         {
@@ -89,20 +92,30 @@ namespace Siimple.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
-            Team? team= _db.Team.FirstOrDefault(i=>i.Id == id);
+            Team? team=_repository.GetTeamById(id);
             if(team==null) return NotFound();
             string path = Path.Combine(_environment.WebRootPath, "assets", "img", team.Imagename);
             if (System.IO.File.Exists(path))
             {
                 System.IO.File.Delete(path);
             }
-            _db.Team.Remove(team);
-            _db.SaveChanges();
+            _repository.Delete(id);
+            
+
+            //Team? team= _db.Team.FirstOrDefault(i=>i.Id == id);
+            //if(team==null) return NotFound();
+            //string path = Path.Combine(_environment.WebRootPath, "assets", "img", team.Imagename);
+            //if (System.IO.File.Exists(path))
+            //{
+            //    System.IO.File.Delete(path);
+            //}
+            //_db.Team.Remove(team);
+            //_db.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
         public IActionResult Edit(int id)
         {
-            Team? team = _db.Team.Include(i=>i.Title).FirstOrDefault(i=>i.Id == id);
+            Team? team = _repository.GetTeamById(id);
             if (team == null) return NotFound();
             EditTeamVm teamvm = new EditTeamVm()
             {

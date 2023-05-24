@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Siimple.DataContext;
 using Siimple.Models;
+using Siimple.Services.Abstracts;
 using Siimple.ViewModels.SettingVm;
 using System.Data;
 
@@ -13,13 +14,15 @@ namespace Siimple.Areas.Admin.Controllers
     public class SettingController : Controller
     {
         private readonly SiimpleDbContext _db;
-        public SettingController(SiimpleDbContext simple)
+        private readonly IRepository<Setting> _repository;
+        public SettingController(SiimpleDbContext simple,IRepository<Setting> repo)
         {
             _db = simple;
+            _repository = repo;
         }
         public IActionResult Index()
         {
-            List<Setting> settings = _db.Setting.ToList();
+            List<Setting> settings = _repository.GetTeams().ToList();
             List<GetSettingVm> settingsvm = new List<GetSettingVm>();
             foreach (Setting setting in settings)
             {
@@ -52,23 +55,25 @@ namespace Siimple.Areas.Admin.Controllers
                 Key = settingvm.Key,
                 Value = settingvm.Value,
             };
-            _db.Setting.Add(setting);
-            _db.SaveChanges();
+            _repository.Create(setting);
+            //_db.Setting.Add(setting);
+            //_db.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
-            Setting setting = _db.Setting.FirstOrDefault(x => x.Id == id);
+            Setting setting = _repository.GetTeamById(id);
             if (setting == null) return NotFound();
-            _db.Setting.Remove(setting);
-            _db.SaveChanges();
+            _repository.Delete(id);
+            //_db.Setting.Remove(setting);
+            //_db.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
         public IActionResult Edit(int id)
         {
-            Setting setting = _db.Setting.FirstOrDefault(x => x.Id == id);
+            Setting setting = _repository.GetTeamById(id);
             if (setting == null) return NotFound();
             EditSettingVm settingVm = new EditSettingVm()
             {
@@ -81,11 +86,12 @@ namespace Siimple.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id,EditSettingVm settingVm)
         {
-            Setting setting = _db.Setting.FirstOrDefault(x => x.Id == id);
+            Setting setting = _repository.GetTeamById(id);
             if (setting == null) return NotFound();
             setting.Value = settingVm.Value;
-            _db.Setting.Update(setting);
-            _db.SaveChanges();
+            _repository.Update(id);
+            //_db.Setting.Update(setting);
+            //_db.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
     }
