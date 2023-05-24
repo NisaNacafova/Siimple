@@ -1,0 +1,78 @@
+﻿@model RegisterVm
+<section id="contact" class="contact section-bg">
+    <div class="container">
+
+        <div class="section-title">
+            <h2>Sign In</h2>
+        </div>
+
+        <div class="row justify-content-center">
+
+            <div class="col-lg-3 col-md-5 mb-5 mb-md-0">
+                <div class="info">
+                    <div class="address">
+                        <i class="bx bx-map"></i>
+                        <p>A108 Adam Street<br>New York, NY 535022</p>
+                    </div>
+
+                    <div class="email">
+                        <i class="bx bx-envelope"></i>
+                        <p>info@example.com</p>
+                    </div>
+
+                    <div class="phone">
+                        <i class="bx bx-phone-call"></i>
+                        <p>+1 5589 55488 55s</p>
+                    </div>
+                </div>
+
+                <div class="social-links">
+                    <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
+                    <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
+                    <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
+                    <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
+                </div>
+
+            </div>
+
+            <div class="col-lg-5 col-md-7">
+                <form  method="post" >
+                    <div class="form-group">
+                        <label asp-for="Name">Name</label>
+                        <input type="text" asp-for="Name" class="form-control" placeholder="Your Name" >
+                        <span asp-validation-for="Name"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Surname">Surname</label>
+                        <input type="text" asp-for="Surname" class="form-control" placeholder="Your Surame">
+                        <span asp-validation-for="Surname"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Username">Username</label>
+                        <input type="text" asp-for="Username" class="form-control" placeholder="Your Username">
+                        <span asp-validation-for="Username"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Email">Email</label>
+                        <input type="text" asp-for="Email" class="form-control" placeholder="Your Email" >
+                        <span asp-validation-for="Email"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Password">Password</label>
+                        <input asp-for="Password" class="form-control" placeholder="Your Password">
+                        <span asp-validation-for="Password"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ConfirmPassword">Confirm Password</label>
+                        <input asp-for="ConfirmPassword" class="form-control" placeholder="Your Confirm Password">
+                        <span asp-validation-for="ConfirmPassword"></span>
+                    </div>
+                    
+                    <div class="text-center"><button type="submit" class="btn btn-outline-success">Sign In</button></div>
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+</section><!-- End Contact Us Section -->

@@ -1,0 +1,42 @@
+﻿@model List<GetSettingVm>
+@{
+    int count = 0;
+}
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+    </div>
+    <a asp-action="Create"><button class="btn btn-success">Create</button></a>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>№</th>
+                        <th>Key</th>
+                        <th>Value</th>
+                        <th>Setting</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (GetSettingVm item in Model)
+                    {
+                        <tr>
+                            <td>@(++count)</td>
+
+                            <td>@item.Key</td>
+                            <td>@item.Value</td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.Id"><button class="btn btn-dark">Edit</button></a>
+                                <a asp-action="Detail" asp-route-id="@item.Id"><button class="btn btn-info">Detail</button></a>
+                                <form asp-action="Delete" asp-route-id="@item.Id">
+                                    <button class="btn btn-danger">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>

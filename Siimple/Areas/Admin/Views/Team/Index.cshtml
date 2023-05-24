@@ -1,0 +1,59 @@
+﻿@model PagnitionVm
+@{
+    int count = (Model.CurrentPage-1)*5;
+}
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+    </div>
+    <a asp-action="Create"><button class="btn btn-success">Create</button></a>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>№</th>
+                        <th>Image</th>
+                        <th>Title</th>
+                        <th>Bio</th>
+                        <th>Icon</th>
+                        <th>Setting</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Teams)
+                    {
+                        <tr>
+                            <td>@(++count)</td>
+                            <td>
+                                <img width="100px" src="~/assets/img/@item.Imagename">
+                            </td>
+                            <td>@item.Title.Name</td>
+                            <td>@item.Bio</td>
+                            <td>@item.Iconname</td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.Id"><button class="btn btn-dark">Edit</button></a>
+                                <a asp-action="Detail" asp-route-id="@item.Id"><button class="btn btn-info">Detail</button></a>
+                                <form asp-action="Delete" asp-route-id="@item.Id">
+                                    <button class="btn btn-danger">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+
+                    }
+                </tbody>
+            </table>
+            <nav aria-label="...">
+                <ul class="pagination pagination-lg">
+                    @for (int i = 1; i <= Model.PageCount; i++)
+                    {
+                        <li class="page-item @(i==Model.CurrentPage ? "disaled" : " ")">
+                            <a class="page-link" asp-route-page="@i" tabindex="-1">@i</a>
+                        </li>
+
+                    }
+
+                </ul>
+            </nav>
+        </div>
+    </div>
