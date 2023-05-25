@@ -15,10 +15,10 @@ namespace Siimple.Areas.Admin.Controllers
     [Authorize(Roles = "Admin")]
     public class TeamController : Controller
     {
-        private readonly IRepository<Team> _repository;
+        private readonly ITeamRepository _repository;
         private readonly SiimpleDbContext _db;
         private readonly IWebHostEnvironment _environment;
-        public TeamController(SiimpleDbContext simple,IWebHostEnvironment web,IRepository<Team> repo)
+        public TeamController(SiimpleDbContext simple,IWebHostEnvironment web, ITeamRepository repo)
         {
             _db = simple;
             _environment = web;
@@ -26,8 +26,9 @@ namespace Siimple.Areas.Admin.Controllers
         }
         public IActionResult Index(int page = 1, int take = 5)
         {
-            List<Team> teams = _db.Team.Skip((page-1)*take).Take(take).Include(p=>p.Title).ToList();
-            int Totalteamcount = _db.Team.Count();
+            List<Team> teams=_repository.GetTeams("Title").Skip((page - 1) * take).Take(take).ToList();
+            //List <Team> teams = _db.Team.Skip((page-1)*take).Take(take).Include(p=>p.Title).ToList();
+            int Totalteamcount = _repository.GetTeams("Title").Count();
             PagnitionVm teamsvm = new PagnitionVm()
             {
                 Teams = teams,
@@ -84,8 +85,10 @@ namespace Siimple.Areas.Admin.Controllers
                 TitleId = teamvm.TitleId,
                 Imagename = FileName
             };
-            _db.Team.Add(team); 
-            await _db.SaveChangesAsync();
+            _repository.Create(team);
+           
+            //_db.Team.Add(team); 
+            //await _db.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
         [HttpPost]
@@ -133,7 +136,8 @@ namespace Siimple.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id,EditTeamVm teamvm)
         {
-            Team? team = _db.Team.Include(i => i.Title).FirstOrDefault(i => i.Id == id);
+            Team? team=_repository.GetTeams("Title").FirstOrDefault(i=>i.Id == id); 
+           // Team? team = _db.Team.Include(i => i.Title).FirstOrDefault(i => i.Id == id);
             if (team == null) return NotFound();
             List<Title> title = _db.Title.ToList();
             if (!ModelState.IsValid)
@@ -165,13 +169,15 @@ namespace Siimple.Areas.Admin.Controllers
             team.Bio = teamvm.Bio;
             team.TitleId=teamvm.TitleId;
             team.Iconname = teamvm.Iconname;
-            _db.Team.Update(team);
-            _db.SaveChanges();
+            _repository.Update(id);
+            //_db.Team.Update(team);
+            //_db.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
         public IActionResult Detail(int id)
         {
-            Team? team = _db.Team.FirstOrDefault(i => i.Id == id);
+            Team? team=_repository.GetTeamById(id);
+            //Team? team = _db.Team.FirstOrDefault(i => i.Id == id);
             if (team == null) return NotFound();
             DetailTeamVm vm = new DetailTeamVm()
             {

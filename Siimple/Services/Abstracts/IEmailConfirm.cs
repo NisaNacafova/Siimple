@@ -2,6 +2,6 @@
 {
     public interface IEmailConfirm
     {
-        public void Email(string email,string link);
+        public void SendMessage(string message,string subject,string to);
     }
 }

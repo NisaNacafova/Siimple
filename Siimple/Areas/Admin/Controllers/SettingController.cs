@@ -14,8 +14,8 @@ namespace Siimple.Areas.Admin.Controllers
     public class SettingController : Controller
     {
         private readonly SiimpleDbContext _db;
-        private readonly IRepository<Setting> _repository;
-        public SettingController(SiimpleDbContext simple,IRepository<Setting> repo)
+        private readonly ISettingRepository _repository;
+        public SettingController(SiimpleDbContext simple, ISettingRepository repo)
         {
             _db = simple;
             _repository = repo;

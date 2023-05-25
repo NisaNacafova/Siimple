@@ -2,9 +2,9 @@
 
 namespace Siimple.Models
 {
-    public class Team
+    public class Team:BaseEntity
     {
-        public int Id { get; set; }
+      
         public string Imagename { get; set; }
         public string Iconname { get; set; }
         public string Bio { get; set; }

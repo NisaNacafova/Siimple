@@ -15,12 +15,13 @@ namespace Siimple.Controllers
         private readonly UserManager<AppUser> _userManager; 
         private readonly SignInManager<AppUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        public AccountController(UserManager<AppUser> user, SignInManager<AppUser> sign, RoleManager<IdentityRole> roleManager)
+        private readonly IEmailConfirm _emailconfirm;
+        public AccountController(UserManager<AppUser> user, SignInManager<AppUser> sign, RoleManager<IdentityRole> roleManager,IEmailConfirm email)
         {
             _userManager = user;
             _signInManager = sign;
             _roleManager = roleManager;
-
+            _emailconfirm = email;
         }
         public IActionResult Register()
         {
@@ -49,6 +50,7 @@ namespace Siimple.Controllers
                     return View(register);
                 }
             }
+            
             //IdentityResult role = await _userManager.AddToRoleAsync(user, "Admin");
             //if (!role.Succeeded)
             //{
@@ -60,19 +62,20 @@ namespace Siimple.Controllers
             //}
             string token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var link = Url.Action("ConfirmUser", "Account", new { token = token, email = user.Email });
-            MailMessage message = new MailMessage("7lz9g6x@code.edu.az", user.Email)
-            {
-                Subject = "Confirmation Email",
-                Body = link,
-            };
-            SmtpClient smtpClient = new SmtpClient()
-            {
-                Host = "smtp.gmail.com",
-                EnableSsl = true,
-                Port = 587,
-                Credentials = new NetworkCredential("7lz9g6x@code.edu.az", "aoyhmyjwzdiprgyq")
-            };
-            smtpClient.Send(message);
+            _emailconfirm.SendMessage($"<a href=\"{link}\"> click for email confirmation</a>", "Confirmation link", register.Email);
+            //MailMessage message = new MailMessage("7lz9g6x@code.edu.az", user.Email)
+            //{
+            //    Subject = "Confirmation Email",
+            //    Body = link,
+            //};
+            //SmtpClient smtpClient = new SmtpClient()
+            //{
+            //    Host = "smtp.gmail.com",
+            //    EnableSsl = true,
+            //    Port = 587,
+            //    Credentials = new NetworkCredential("7lz9g6x@code.edu.az", "aoyhmyjwzdiprgyq")
+            //};
+            //smtpClient.Send(message);
             return RedirectToAction(nameof(Login));
         }
         public IActionResult Login()
